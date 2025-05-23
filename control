@@ -1,0 +1,8 @@
+Package: com.example.mytweak
+Name: MyTweak
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Автособранный твик через GitHub Actions
+Maintainer: You
+Author: You
+Section: Tweaks
