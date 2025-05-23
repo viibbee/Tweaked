@@ -11,7 +11,7 @@
   .btn { margin-top: 1em; padding: 0.7em 1.5em; font-size: 1em; cursor: pointer; }
   .button-row { margin-top: 1em; border: 1px solid #ccc; padding: 0.5em; }
   .button-row > div { margin-bottom: 0.5em; }
-  .status { margin-top: 1em; font-weight: bold; }
+  .status { margin-top: 1em; font-weight: bold; white-space: pre-wrap; }
 </style>
 </head>
 <body>
@@ -65,12 +65,10 @@
   addButtonRow();
 
   function escapeForObjC(str) {
-    // Экранируем кавычки и слэши
     return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
   }
 
   function generateTweakXM(title, message, buttons) {
-    // Формируем кнопки Obj-C код
     let btnsCode = '';
     buttons.forEach((btn, i) => {
       btnsCode += `
@@ -117,6 +115,14 @@ Depends: mobilesubstrate
 `;
   }
 
+  // Корректный base64 для UTF-8 строк
+  function toBase64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    bytes.forEach(b => binary += String.fromCharCode(b));
+    return btoa(binary);
+  }
+
   async function generateAndPush() {
     statusEl.textContent = '';
     const token = tokenInput.value.trim();
@@ -156,7 +162,6 @@ Depends: mobilesubstrate
 
     statusEl.textContent = 'Получаю SHA файлов...';
 
-    // Функция для получения sha файла в репозитории
     async function getSha(filename) {
       const res = await fetch(`https://api.github.com/repos/viibbee/Tweaked/contents/${filename}`, {
         headers: { Authorization: 'token ' + token }
@@ -165,17 +170,18 @@ Depends: mobilesubstrate
         const data = await res.json();
         return data.sha;
       }
-      return null;
+      if (res.status === 404) return null; // файла нет — ок
+      throw new Error(`Ошибка при получении SHA для ${filename}: ${res.status}`);
     }
 
-    // Функция для пуша файла
     async function pushFile(filename, content, sha = null) {
       const body = {
         message: `Update ${filename}`,
-        content: btoa(unescape(encodeURIComponent(content))),
+        content: toBase64(content),
         branch: "main",
       };
       if (sha) body.sha = sha;
+
       const res = await fetch(`https://api.github.com/repos/viibbee/Tweaked/contents/${filename}`, {
         method: 'PUT',
         headers: {
@@ -184,7 +190,11 @@ Depends: mobilesubstrate
         },
         body: JSON.stringify(body)
       });
-      return res.ok;
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(`${res.status}: ${err.message}`);
+      }
+      return true;
     }
 
     try {
@@ -192,16 +202,12 @@ Depends: mobilesubstrate
       const shaControl = await getSha('control');
 
       statusEl.textContent = 'Отправляю Tweak.xm...';
-      const ok1 = await pushFile('Tweak.xm', tweakCode, shaTweak);
+      await pushFile('Tweak.xm', tweakCode, shaTweak);
 
       statusEl.textContent = 'Отправляю control...';
-      const ok2 = await pushFile('control', controlCode, shaControl);
+      await pushFile('control', controlCode, shaControl);
 
-      if (ok1 && ok2) {
-        statusEl.textContent = '✅ Файлы успешно отправлены! GitHub Actions начнёт сборку в ближайшее время.';
-      } else {
-        statusEl.textContent = '❌ Ошибка при отправке файлов.';
-      }
+      statusEl.textContent = '✅ Файлы успешно отправлены! GitHub Actions начнёт сборку в ближайшее время.';
     } catch (e) {
       statusEl.textContent = '❌ Ошибка: ' + e.message;
     }
