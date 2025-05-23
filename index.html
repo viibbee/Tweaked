@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Генератор базового твика Alert</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; background: #f7f7f7; }
+  h1 { text-align: center; }
+  label { display: block; margin-top: 15px; font-weight: bold; }
+  input[type="text"], textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; font-size: 16px; }
+  button { margin-top: 25px; padding: 12px 20px; font-size: 18px; cursor: pointer; }
+  .btn-container { display: flex; gap: 10px; }
+  .btn-container > div { flex: 1; }
+  footer { margin-top: 40px; font-size: 14px; color: #666; text-align: center; }
+</style>
+</head>
+<body>
+
+<h1>Генератор базового твика Alert</h1>
+
+<form id="tweakForm">
+  <label for="greeting">Текст приветствия (Alert)</label>
+  <textarea id="greeting" rows="3" placeholder="Привет! Это твой твик"></textarea>
+
+  <div class="btn-container">
+    <div>
+      <label for="btn1Title">Название кнопки 1</label>
+      <input type="text" id="btn1Title" placeholder="Скачать" />
+      <label for="btn1Link">Ссылка кнопки 1</label>
+      <input type="text" id="btn1Link" placeholder="https://example.com" />
+    </div>
+    <div>
+      <label for="btn2Title">Название кнопки 2</label>
+      <input type="text" id="btn2Title" placeholder="Купить сертификат" />
+      <label for="btn2Link">Ссылка кнопки 2</label>
+      <input type="text" id="btn2Link" placeholder="https://example2.com" />
+    </div>
+  </div>
+
+  <button type="submit">Сгенерировать и скачать твик (.zip)</button>
+</form>
+
+<footer>© Твой генератор твиков</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+<script>
+  const form = document.getElementById('tweakForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const greeting = document.getElementById('greeting').value.trim() || "Привет! Это твой твик";
+    const btn1Title = document.getElementById('btn1Title').value.trim() || "Скачать";
+    const btn1Link = document.getElementById('btn1Link').value.trim() || "https://example.com";
+    const btn2Title = document.getElementById('btn2Title').value.trim() || "Купить сертификат";
+    const btn2Link = document.getElementById('btn2Link').value.trim() || "https://example2.com";
+
+    const tweakContent = `#import <UIKit/UIKit.h>
+
+%hook SpringBoard
+
+- (void)applicationDidFinishLaunching:(id)application {
+    %orig;
+
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Приветствие"
+                                                                   message:"${greeting}"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* button1 = [UIAlertAction actionWithTitle:"${btn1Title}"
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction * action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:"${btn1Link}"] options:@{} completionHandler:nil];
+    }];
+
+    UIAlertAction* button2 = [UIAlertAction actionWithTitle:"${btn2Title}"
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction * action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:"${btn2Link}"] options:@{} completionHandler:nil];
+    }];
+
+    [alert addAction:button1];
+    [alert addAction:button2];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UIViewController* rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+        [rootVC presentViewController:alert animated:YES completion:nil];
+    });
+}
+
+%end
+`;
+
+    const controlContent = `Package: com.example.myalert
+Name: My Alert Tweak
+Version: 1.0
+Architecture: iphoneos-arm
+Depends: mobilesubstrate
+Description: Простой alert твик с приветствием и кнопками
+Maintainer: YourName
+Author: YourName
+Section: Tweaks
+`;
+
+    const makefileContent = `THEOS_PACKAGE_NAME = MyAlertTweak
+MyAlertTweak_FILES = Tweak.xm
+MyAlertTweak_FRAMEWORKS = UIKit
+include $(THEOS)/makefiles/common.mk
+include $(THEOS_MAKE_PATH)/tweak.mk
+`;
+
+    const zip = new JSZip();
+    zip.file("Tweak.xm", tweakContent);
+    zip.file("control", controlContent);
+    zip.file("Makefile", makefileContent);
+
+    const content = await zip.generateAsync({type:"blob"});
+
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(content);
+    a.download = "MyAlertTweak.zip";
+    a.click();
+
+    URL.revokeObjectURL(a.href);
+  });
+</script>
+
+</body>
+</html>
