@@ -1,8 +1,9 @@
-Package: com.example.mytweak
-Name: MyTweak
+Package: com.yourname.tweakalert
+Name: Tweak Alert
 Version: 1.0
 Architecture: iphoneos-arm
-Description: Автособранный твик через GitHub Actions
-Maintainer: You
-Author: You
+Description: Simple alert tweak with buttons
+Maintainer: YourName
+Author: YourName
 Section: Tweaks
+Depends: mobilesubstrate
