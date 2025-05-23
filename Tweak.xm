@@ -4,7 +4,7 @@
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
     %orig;
 
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Vhi"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"VHI"
                                                                    message:@"Добро пожаловать"
                                                             preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *button0 = [UIAlertAction actionWithTitle:@"Канал"
