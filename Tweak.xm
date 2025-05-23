@@ -1,22 +1,24 @@
 #import <UIKit/UIKit.h>
-
 %hook SpringBoard
 
-- (void)applicationDidFinishLaunching:(id)application {
+- (void)applicationDidFinishLaunching:(UIApplication *)application {
     %orig;
 
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Приветствие"
-                                                                   message:@"Добро пожаловать!"
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Vhi"
+                                                                   message:@"Добро пожаловать"
                                                             preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *button0 = [UIAlertAction actionWithTitle:@"Канал"
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *url = [NSURL URLWithString:@"https://t.me/iosgodsoficial"];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        }
+    }];
+    [alert addAction:button0];
 
-    UIAlertAction* ok = [UIAlertAction actionWithTitle:@"ОК"
-                                                 style:UIAlertActionStyleDefault
-                                               handler:nil];
-    [alert addAction:ok];
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIViewController* rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
-        [rootVC presentViewController:alert animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
     });
 }
 
