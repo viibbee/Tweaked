@@ -1,16 +1,65 @@
-
 <!DOCTYPE html>
-<html>
-<head><title>iPA Signer</title></head>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Установка IPA через ESign / Gbox</title>
+  <style>
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      padding: 2rem;
+      max-width: 500px;
+      text-align: center;
+      background: #1a1a1a;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+    }
+    h1 {
+      background: linear-gradient(to right, #ff4d4d, #ff0000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    a.btn {
+      display: block;
+      background: #ff1a1a;
+      color: white;
+      text-decoration: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      margin: 0.5rem 0;
+      transition: background 0.3s;
+    }
+    a.btn:hover {
+      background: #e60000;
+    }
+  </style>
+</head>
 <body>
-  <h1>Upload Certificate and App</h1>
-  <form id="signForm">
-    <label>IPA: <input type="file" name="ipa" required /></label><br/>
-    <label>.p12: <input type="file" name="p12" required /></label><br/>
-    <label>.mobileprovision: <input type="file" name="mobileprovision" required /></label><br/>
-    <button type="submit">Sign & Install</button>
-  </form>
-  <div id="output"></div>
-  <script src="script.js"></script>
+  <div class="container">
+    <h1>Установка IPA</h1>
+    <p>
+      1. Установите <a href="https://esign.pro" target="_blank">ESign</a> или <a href="https://gbox.run/install" target="_blank">Gbox</a> на своё устройство.<br>
+      2. Импортируйте ваш сертификат (.p12 и .mobileprovision) вручную через настройки установщика.<br>
+      3. Нажмите кнопку ниже, чтобы загрузить IPA в установщик и установить его на устройство.
+    </p>
+    <a href="https://example.com/myapp.ipa" class="btn">Открыть IPA в ESign</a>
+    <a href="https://gbox.run/install" class="btn">Открыть Gbox</a>
+  </div>
 </body>
 </html>
