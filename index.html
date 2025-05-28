@@ -2,64 +2,57 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Установка IPA через ESign / Gbox</title>
   <style>
     body {
-      background: #0f0f0f;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    .container {
-      padding: 2rem;
-      max-width: 500px;
-      text-align: center;
-      background: #1a1a1a;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+      color: #333;
     }
     h1 {
-      background: linear-gradient(to right, #ff4d4d, #ff0000);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      text-align: center;
     }
-    p {
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: 20px auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    a.btn {
+    .btn {
       display: block;
-      background: #ff1a1a;
+      text-align: center;
+      padding: 12px;
+      margin: 10px 0;
+      background: #007bff;
       color: white;
       text-decoration: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 10px;
-      margin: 0.5rem 0;
-      transition: background 0.3s;
+      border-radius: 8px;
+      font-weight: bold;
     }
-    a.btn:hover {
-      background: #e60000;
+    .btn:hover {
+      background: #0056b3;
+    }
+    ul {
+      padding-left: 20px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Установка IPA</h1>
-    <p>
-      1. Установите <a href="https://esign.pro" target="_blank">ESign</a> или <a href="https://gbox.run/install" target="_blank">Gbox</a> на своё устройство.<br>
-      2. Импортируйте ваш сертификат (.p12 и .mobileprovision) вручную через настройки установщика.<br>
-      3. Нажмите кнопку ниже, чтобы загрузить IPA в установщик и установить его на устройство.
-    </p>
-    <a href="https://example.com/myapp.ipa" class="btn">Открыть IPA в ESign</a>
-    <a href="https://gbox.run/install" class="btn">Открыть Gbox</a>
+  <h1>Установка IPA через ESign / Gbox</h1>
+  <div class="card">
+    <p><strong>Поддержка устройств iOS 14–17</strong></p>
+    <p>Следуйте этим шагам:</p>
+    <ul>
+      <li>1. Установите <a href="https://esign.pro" target="_blank">ESign</a> или <a href="https://gbox.run/install" target="_blank">Gbox</a></li>
+      <li>2. Импортируйте ваш сертификат (.p12 и .mobileprovision) в ESign вручную</li>
+      <li>3. Нажмите кнопку ниже для установки IPA</li>
+    </ul>
+    <a class="btn" href="https://vhistoretg.s3.eu-north-1.amazonaws.com/FF_1.111.X_1.3.8.ipa">Открыть IPA в ESign</a>
+    <a class="btn" href="https://gbox.run/install">Открыть через Gbox</a>
   </div>
 </body>
 </html>
